@@ -42,7 +42,7 @@ jobs:
       - name: Checkout Boomi CICD Library
         uses: actions/checkout@v4
         with:
-          repository: <company-organization>/boomi-cicd-cli-py
+          repository: adambedenbaugh/boomi-cicd-cli-py
           token: ${{ secrets.BOOMI_CICD_LIBRARY_PAT }}
           path: boomi-cicd-cli-py
 
@@ -94,7 +94,7 @@ jobs:
       - name: Checkout Boomi CICD Library
         uses: actions/checkout@v4
         with:
-          repository: <company-organization>/boomi-cicd-cli-py
+          repository: adambedenbaugh/boomi-cicd-cli-py
           token: ${{ secrets.BOOMI_CICD_LIBRARY_PAT }}
           path: boomi-cicd-cli-py
 
@@ -138,7 +138,7 @@ jobs:
       - name: Checkout Boomi CICD Library
         uses: actions/checkout@v4
         with:
-          repository: <company-organization>/boomi-cicd-cli-py
+          repository: adambedenbaugh/boomi-cicd-cli-py
           token: ${{ secrets.BOOMI_CICD_LIBRARY_PAT }}
           path: boomi-cicd-cli-py
 
