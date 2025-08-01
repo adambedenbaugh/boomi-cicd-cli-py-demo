@@ -1,0 +1,155 @@
+name: Boomi CICD Deployments
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+
+  development:
+    name: Development Deployment
+    runs-on: self-hosted
+    environment: development
+
+    env:
+      BOOMI_ACCOUNT_ID: ${{ vars.BOOMI_ACCOUNT_ID }}
+      BOOMI_BASE_URL: ${{ vars.BOOMI_BASE_URL }}
+      BOOMI_ENVIRONMENT_NAME: "${{ vars.BOOMI_ENVIRONMENT_NAME }}"
+      BOOMI_USERNAME: ${{ vars.BOOMI_USERNAME }}
+      BOOMI_PASSWORD: ${{ secrets.BOOMI_PASSWORD }}
+      BOOMI_RELEASE_FILE: "boomi-cicd-release/boomi_release/release.json"
+
+    steps:
+
+      - name: 'Cleanup directory'
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Checkout current Boomi release repo
+        uses: actions/checkout@v4
+        with:
+          path: boomi-cicd-release
+
+      - name: Checkout Boomi CICD Library
+        uses: actions/checkout@v4
+        with:
+          repository: <company-organization>/boomi-cicd-cli-py
+          token: ${{ secrets.BOOMI_CICD_LIBRARY_PAT }}
+          path: boomi-cicd-cli-py
+
+      - name: Install dependencies
+        run: |
+          cd ${GITHUB_WORKSPACE}/boomi-cicd-cli-py
+          pip install -r ./requirements.txt
+
+      - name: Deployment
+        run: | 
+          cd ${GITHUB_WORKSPACE}/boomi-cicd-cli-py
+          export PYTHONPATH=$(pwd)
+          export BOOMI_RELEASE_FILE=${GITHUB_WORKSPACE}/${BOOMI_RELEASE_FILE}
+          python3.11 boomi_cicd/scripts/release_pipeline.py
+
+  stage:
+    name: Stage Deployment
+    runs-on: self-hosted
+    needs: development
+
+    environment: stage
+
+    env:
+      BOOMI_ACCOUNT_ID: ${{ vars.BOOMI_ACCOUNT_ID }}
+      BOOMI_BASE_URL: ${{ vars.BOOMI_BASE_URL }}
+      BOOMI_USERNAME: ${{ vars.BOOMI_USERNAME }}
+      BOOMI_PASSWORD: ${{ secrets.BOOMI_PASSWORD }}
+      BOOMI_RELEASE_FILE: "boomi-cicd-release/boomi_release/release.json"
+      BOOMI_ENVIRONMENT_NAME: "${{ vars.BOOMI_ENVIRONMENT_NAME }}"
+
+    steps:
+      - name: 'Cleanup directory'
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Checkout current Boomi release repo
+        uses: actions/checkout@v4
+        with:
+          path: boomi-cicd-release
+
+      - name: Checkout Boomi CICD Library
+        uses: actions/checkout@v4
+        with:
+          repository: <company-organization>/boomi-cicd-cli-py
+          token: ${{ secrets.BOOMI_CICD_LIBRARY_PAT }}
+          path: boomi-cicd-cli-py
+
+      - name: Install dependencies
+        run: |
+          cd ${GITHUB_WORKSPACE}/boomi-cicd-cli-py
+          pip install -r ./requirements.txt
+
+      - name: Deployment
+        run: | 
+          cd ${GITHUB_WORKSPACE}/boomi-cicd-cli-py
+          export PYTHONPATH=$(pwd)
+          export BOOMI_RELEASE_FILE=${GITHUB_WORKSPACE}/${BOOMI_RELEASE_FILE}
+          python3.11 boomi_cicd/scripts/release_pipeline.py
+
+  production:
+    name: Production Deployment
+    runs-on: self-hosted
+    needs: [development, stage]
+
+    environment: production
+
+    steps:
+      - name: 'Cleanup directory'
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Checkout current Boomi release repo
+        uses: actions/checkout@v4
+        with:
+          path: boomi-cicd-release
+
+      - name: Checkout Boomi CICD Library
+        uses: actions/checkout@v4
+        with:
+          repository: <company-organization>/boomi-cicd-cli-py
+          token: ${{ secrets.BOOMI_CICD_LIBRARY_PAT }}
+          path: boomi-cicd-cli-py
+
+      - name: Install dependencies
+        run: |
+          cd ${GITHUB_WORKSPACE}/boomi-cicd-cli-py
+          pip install -r ./requirements.txt
+
+      - name: Deployment
+        run: | 
+          cd ${GITHUB_WORKSPACE}/boomi-cicd-cli-py
+          export PYTHONPATH=$(pwd)
+          export BOOMI_RELEASE_FILE=${GITHUB_WORKSPACE}/${BOOMI_RELEASE_FILE}
+          python3.11 boomi_cicd/scripts/release_pipeline.py
