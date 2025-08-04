@@ -1,9 +1,13 @@
 name: Boomi CICD Deployments
 
 on:
-  push:
+  pull_request:
     branches:
-    - main
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
 
 jobs:
 
