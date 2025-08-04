@@ -14,6 +14,7 @@ jobs:
 
     env:
       BOOMI_ACCOUNT_ID: ${{ vars.BOOMI_ACCOUNT_ID }}
+      BOOMI_ATOM_NAME: "${{ vars.BOOMI_ATOM_NAME }}"
       BOOMI_BASE_URL: ${{ vars.BOOMI_BASE_URL }}
       BOOMI_ENVIRONMENT_NAME: "${{ vars.BOOMI_ENVIRONMENT_NAME }}"
       BOOMI_USERNAME: ${{ vars.BOOMI_USERNAME }}
