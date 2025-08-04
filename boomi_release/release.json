@@ -2,7 +2,7 @@
   "pipelines": [
     {
       "processName": "Salesforce to NetSuite Accounts",
-      "packageVersion": "4.10",
+      "packageVersion": "4.11",
       "componentId": "4f9568f7-aa22-4519-b038-47ff7889ec3e",
       "notes": "This is an example set of notes",
       "schedule": "0 0 1 * * * ; 30 0 2-7 * * *",
