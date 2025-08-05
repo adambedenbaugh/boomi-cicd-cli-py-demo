@@ -15,6 +15,8 @@ jobs:
     name: Development Deployment
     runs-on: ubuntu-latest
     environment: development
+    permissions:
+      pull-requests: write
 
     env:
       BOOMI_ACCOUNT_ID: ${{ vars.BOOMI_ACCOUNT_ID }}
@@ -152,6 +154,18 @@ jobs:
     needs: [development, stage]
 
     environment: production
+
+    permissions:
+      contents: write     
+      pull-requests: write
+
+    env:
+      BOOMI_ACCOUNT_ID: ${{ vars.BOOMI_ACCOUNT_ID }}
+      BOOMI_BASE_URL: ${{ vars.BOOMI_BASE_URL }}
+      BOOMI_USERNAME: ${{ vars.BOOMI_USERNAME }}
+      BOOMI_PASSWORD: ${{ secrets.BOOMI_PASSWORD }}
+      BOOMI_RELEASE_FILE: "boomi-cicd-release/boomi_release/release.json"
+      BOOMI_ENVIRONMENT_NAME: "${{ vars.BOOMI_ENVIRONMENT_NAME }}"
 
     steps:
       - name: 'Cleanup directory'
