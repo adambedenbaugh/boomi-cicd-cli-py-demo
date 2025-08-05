@@ -85,7 +85,7 @@ jobs:
         if: always()
         id: process_results
         run: |
-          if [ ! -f "${GITHUB_WORKSPACE}/test-results/junit.xml" ]; then
+          if [ ! -f "${GITHUB_WORKSPACE}/test-*.xml" ]; then
             echo "test_status=failure" >> $GITHUB_OUTPUT
             echo "test_message=❌ No test results found" >> $GITHUB_OUTPUT
             exit 1
