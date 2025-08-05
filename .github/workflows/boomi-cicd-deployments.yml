@@ -158,6 +158,14 @@ jobs:
 
     environment: production
 
+    env:
+      BOOMI_ACCOUNT_ID: ${{ vars.BOOMI_ACCOUNT_ID }}
+      BOOMI_BASE_URL: ${{ vars.BOOMI_BASE_URL }}
+      BOOMI_USERNAME: ${{ vars.BOOMI_USERNAME }}
+      BOOMI_PASSWORD: ${{ secrets.BOOMI_PASSWORD }}
+      BOOMI_RELEASE_FILE: "boomi-cicd-release/boomi_release/release.json"
+      BOOMI_ENVIRONMENT_NAME: "${{ vars.BOOMI_ENVIRONMENT_NAME }}"
+
     steps:
       - name: Merge PR to Main
         uses: actions/github-script@v7
