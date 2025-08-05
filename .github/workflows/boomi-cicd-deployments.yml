@@ -77,7 +77,7 @@ jobs:
         uses: dorny/test-reporter@v1
         with:
           name: Boomi Tests
-          path: ./test-*.xml
+          path: ${GITHUB_WORKSPACE}/boomi-cicd-cli-py/test-*.xml
           reporter: java-junit
           fail-on-error: true
 
@@ -85,7 +85,7 @@ jobs:
         if: always()
         id: process_results
         run: |
-          if [ ! -f "${GITHUB_WORKSPACE}/test-*.xml" ]; then
+          if [ ! -f "${GITHUB_WORKSPACE}/boomi-cicd-cli-py/test-*.xml" ]; then
             echo "test_status=failure" >> $GITHUB_OUTPUT
             echo "test_message=❌ No test results found" >> $GITHUB_OUTPUT
             exit 1
