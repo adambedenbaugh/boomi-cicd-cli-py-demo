@@ -198,8 +198,34 @@ jobs:
           pip install -r ./requirements.txt
 
       - name: Deployment
+        id: deployment
         run: | 
           cd ${GITHUB_WORKSPACE}/boomi-cicd-cli-py
           export PYTHONPATH=$(pwd)
           export BOOMI_RELEASE_FILE=${GITHUB_WORKSPACE}/${BOOMI_RELEASE_FILE}
           python3.11 boomi_cicd/scripts/release_pipeline.py
+
+      - name: Merge and Approve PR
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // Merge the PR
+            await github.rest.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              merge_method: 'squash',
+              commit_title: `${context.payload.pull_request.title} (#${context.issue.number})`,
+              commit_message: 'Automatically merged after successful production deployment\n\nMerged after successful deployment to production environment.'
+            });
+
+            // Add approval review
+            await github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              event: 'APPROVE',
+              body: '✅ Automatically approved after successful production deployment'
+            });
