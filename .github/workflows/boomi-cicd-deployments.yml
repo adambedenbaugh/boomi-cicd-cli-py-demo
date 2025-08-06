@@ -213,15 +213,6 @@ jobs:
           github-token: ${{ secrets.WORKFLOW_PAT }}
           script: |
             try {
-              // Add approval review first
-              await github.rest.pulls.createReview({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: context.issue.number,
-                event: 'APPROVE',
-                body: '✅ Automatically approved after successful production deployment'
-              });
-
               // Then merge the PR
               await github.rest.pulls.merge({
                 owner: context.repo.owner,
